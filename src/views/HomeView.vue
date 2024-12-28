@@ -1,6 +1,15 @@
 <script setup>
 import ProductCard from '../components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
+
+import { onBeforeMount, onMounted } from 'vue';
+onBeforeMount(() => {
+	console.log('Component will be mounted soon');
+});
+
+onMounted(() => {
+	console.log('Component has been mounted');
+});
 </script>
 
 <template>
