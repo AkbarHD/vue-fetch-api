@@ -2,7 +2,14 @@
 import ProductCard from '../components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
 
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref } from 'vue';
+
+const page = ref(1);
+function nextPage() {
+	page.value++;
+}
+
+
 onBeforeMount(() => {
 	console.log('Component will be mounted soon');
 });
@@ -10,9 +17,19 @@ onBeforeMount(() => {
 onMounted(() => {
 	console.log('Component has been mounted');
 });
+
+onBeforeUpdate(() => {
+	console.log('Component will be updated soon');
+});
+
+onUpdated(() => {
+	console.log('Component has been updated');
+});
 </script>
 
 <template>
+	{{ page }}
+	<button @click="nextPage">Next Page</button>
 	<main>
 		<div class="product-grid">
 			<!-- Product 1 -->
