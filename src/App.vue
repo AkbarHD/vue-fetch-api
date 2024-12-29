@@ -1,9 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router';
+import HomeView from './views/HomeView.vue';
 </script>
 
 <template>
-  <RouterLink to="/">Home</RouterLink>
-  <RouterLink to="/about">About</RouterLink>
-  <RouterView />
+  
+  <!-- dengan menggunakan suspend di sini dari HomeView  agar fetch data lebih cepat-->
+    <Suspense>
+      <template #default>
+        <HomeView />
+      </template>
+      <template #fallback>
+        <p>Loading...</p>
+      </template>
+    </Suspense>
+
 </template>

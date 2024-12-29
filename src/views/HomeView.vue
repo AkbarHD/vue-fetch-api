@@ -4,42 +4,58 @@ import Pagination from '@/components/Pagination.vue';
 
 import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref } from 'vue';
 
-const page = ref(1);
-function nextPage() {
-	page.value++;
-}
+// const page = ref(1);
+// function nextPage() {
+	// 	page.value++;
+	// }
+import axios from 'axios';
+const products = ref([]);
 
+products.value = await axios
+	.get('http://localhost:3000/products')
+	.then((res) => res.data);
 
-onBeforeMount(() => {
-	console.log('Component will be mounted soon');
-});
+console.log(products.value);
 
-onMounted(() => {
-	console.log('Component has been mounted');
-});
+// async function getProducts() {
+// 	const response = await axios.get('http://localhost:3000/products');
+// 	products.value = response.data;
+// 	console.log(response.data);
+// }
+
+// getProducts();
+
+// onBeforeMount(() => {
+// 	console.log('Component will be mounted soon');
+// });
+
+// onMounted(() => {
+// 	console.log('Component has been mounted');
+// });
 
 // pagination
-onBeforeUpdate(() => {
-	console.log('Component will be updated soon');
-});
+// onBeforeUpdate(() => {
+// 	console.log('Component will be updated soon');
+// });
 
-onUpdated(() => {
-	console.log('Component has been updated');
-});
+// onUpdated(() => {
+// 	console.log('Component has been updated');
+// });
 
 // berpindah halaman
-onBeforeUnmount(() => {
-	console.log('Component will be unmounted soon');
-});
+// onBeforeUnmount(() => {
+// 	console.log('Component will be unmounted soon');
+// });
 
-onUnmounted(() => {
-	console.log('Component has been unmounted');
-});
+// onUnmounted(() => {
+// 	console.log('Component has been unmounted');
+// });
 
 </script>
 
 <template>
-	{{ page }}
+	{{ products }}
+	<!-- {{ page }} -->
 	<button @click="nextPage">Next Page</button>
 	<main>
 		<div class="product-grid">
@@ -69,6 +85,4 @@ onUnmounted(() => {
 	align-items: center;
 	margin-top: 20px;
 }
-
-
 </style>
