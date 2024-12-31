@@ -2,7 +2,7 @@
 import ProductCard from '../components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
 
-import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref } from 'vue';
+import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
 
 // const page = ref(1);
 // function nextPage() {
@@ -10,12 +10,20 @@ import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, o
 	// }
 import axios from 'axios';
 const products = ref([]);
+const page = ref(1);
+const limit = ref(8);
 
-products.value = await axios
-	.get('http://localhost:3000/products')
+products.value = await axios.
+	get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
 	.then((res) => res.data);
 
-console.log(products.value);
+// console.log(products.value);
+
+watch(page, async () => [
+	products.value = await axios.
+		get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+		.then((res) => res.data)
+]);
 
 // async function getProducts() {
 // 	const response = await axios.get('http://localhost:3000/products');
@@ -54,16 +62,16 @@ console.log(products.value);
 </script>
 
 <template>
-	{{ products }}
+	<!-- {{ products }} -->  
 	<!-- {{ page }} -->
 	<button @click="nextPage">Next Page</button>
 	<main>
 		<div class="product-grid">
 			<!-- Product 1 -->
-      <ProductCard />
+     		 <ProductCard v-for="(product, index) in products.data" :key="index" :product="product" />
 		</div>
 		<div class="pagination">
-      <Pagination />
+      		<Pagination />
 		</div>
 	</main>
 </template>
