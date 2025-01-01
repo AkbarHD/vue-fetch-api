@@ -1,29 +1,77 @@
 <script setup>
 import ProductCard from '../components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
+import Loading from '@/components/Loading.vue';
 
-import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
+import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref, watch, watchEffect } from 'vue';
 
 // const page = ref(1);
 // function nextPage() {
-	// 	page.value++;
-	// }
+// 	page.value++;
+// }
 import axios from 'axios';
 const products = ref([]);
 const page = ref(1);
 const limit = ref(8);
+const isLoading = ref(true);
 
-products.value = await axios.
-	get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
-	.then((res) => res.data);
+// penggunaan watchEffect akan memangkas lifecycle dan watch cukup menggunakan watchEffect
+async function fetchData() {
+	try {
+		isLoading.value = true; // agar muncul loading
+		const response = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+		products.value = response.data;
+	} catch (error) {
+		console.log(error);
+	} finally {
+		isLoading.value = false
+	}
+}
+
+watchEffect(() => {
+	fetchData();
+});
+
+// penggunaan lifecycle
+onMounted(async () => {
+	try {
+		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+			.then((res) => res.data);
+	} catch (error) {
+		console.log(error);
+	} finally {
+		isLoading.value = false
+	}
+});
+
+watch(page, async () => {
+	try {
+		// tambahkan loading true
+		isLoading.value = true
+		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+			.then((res) => res.data);
+	} catch (error) {
+		console.log(error);
+	} finally {
+		isLoading.value = false
+	}
+});
+
+// tidak mnggunakan lifecycle, jadi tidak perlu menggunakan suspend
+// products.value = await axios.
+// 	get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+// 	.then((res) => res.data);
 
 // console.log(products.value);
 
-watch(page, async () => [
-	products.value = await axios.
-		get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
-		.then((res) => res.data)
-]);
+
+function changePage(newPage) {
+	if (newPage < 1) return;
+	if (newPage > products.value.pages) return;
+
+	page.value = newPage;
+}
+
 
 // async function getProducts() {
 // 	const response = await axios.get('http://localhost:3000/products');
@@ -62,16 +110,19 @@ watch(page, async () => [
 </script>
 
 <template>
-	<!-- {{ products }} -->  
+	<!-- {{ products }} -->
 	<!-- {{ page }} -->
-	<button @click="nextPage">Next Page</button>
+	<!-- <button @click="nextPage">Next Page</button> -->
+	<div v-show="isLoading">
+		<Loading />
+	</div>
 	<main>
 		<div class="product-grid">
-			<!-- Product 1 -->
-     		 <ProductCard v-for="(product, index) in products.data" :key="index" :product="product" />
+			<!-- Product 1 --> <!-- karna menggunakan pagination harus products.data -->
+			<ProductCard v-for="(product, index) in products.data" :key="index" :product="product" />
 		</div>
 		<div class="pagination">
-      		<Pagination />
+			<Pagination :page="page" :totalPages="products.pages" @change-page="changePage" />
 		</div>
 	</main>
 </template>
