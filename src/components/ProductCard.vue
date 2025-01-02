@@ -1,16 +1,22 @@
 <script setup>
 import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
 const { product } = defineProps(['product'])
 // const { product } = defineProps({ product: Object });
+const route = useRouter()
+const goToDetail = () => {
+	// route.push({ name: 'ProductView', params: { id: product.id } })
+	route.push(`/product/${product.id}`)
+}
 </script>
 
 <template>
-         <div class="product-card">
-				<img :src="product.image" :alt="product.title" class="product-image" />
-				<h2 class="product-title">{{ product.title }}</h2>
-				<p class="product-description">{{ product.description }}</p>
-				<span class="product-price">Rp. {{ product.price }}</span>
-			</div>
+	<div class="product-card" @click="$router.push(`/product/${product.id}`)">
+		<img :src="product.image" :alt="product.title" class="product-image" />
+		<h2 class="product-title">{{ product.title }}</h2>
+		<p class="product-description">{{ product.description }}</p>
+		<span class="product-price">Rp. {{ product.price }}</span>
+	</div>
 </template>
 
 <style scope>

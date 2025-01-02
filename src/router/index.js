@@ -4,6 +4,7 @@ import {
 } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
+import ProductView from '../views/ProductView.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -12,6 +13,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/product/:id',
+      name: 'Product',
+      component: ProductView,
+      props: true, // Menggunakan props untuk menerima ID produk dari URL
     },
     {
       path: '/about',

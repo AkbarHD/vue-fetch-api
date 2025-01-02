@@ -33,29 +33,29 @@ watchEffect(() => {
 });
 
 // penggunaan lifecycle
-onMounted(async () => {
-	try {
-		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
-			.then((res) => res.data);
-	} catch (error) {
-		console.log(error);
-	} finally {
-		isLoading.value = false
-	}
-});
+// onMounted(async () => {
+// 	try {
+// 		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+// 			.then((res) => res.data);
+// 	} catch (error) {
+// 		console.log(error);
+// 	} finally {
+// 		isLoading.value = false
+// 	}
+// });
 
-watch(page, async () => {
-	try {
-		// tambahkan loading true
-		isLoading.value = true
-		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
-			.then((res) => res.data);
-	} catch (error) {
-		console.log(error);
-	} finally {
-		isLoading.value = false
-	}
-});
+// watch(page, async () => {
+// 	try {
+// 		// tambahkan loading true
+// 		isLoading.value = true
+// 		products.value = await axios.get(`http://localhost:3000/products?_page=${page.value}&_per_page=${limit.value}`)
+// 			.then((res) => res.data);
+// 	} catch (error) {
+// 		console.log(error);
+// 	} finally {
+// 		isLoading.value = false
+// 	}
+// });
 
 // tidak mnggunakan lifecycle, jadi tidak perlu menggunakan suspend
 // products.value = await axios.
