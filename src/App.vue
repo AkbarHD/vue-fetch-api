@@ -4,17 +4,17 @@ import { RouterLink, RouterView } from 'vue-router';
 </script>
 
 <template>
-  
+
   <!-- dengan menggunakan suspend di sini dari HomeView  agar fetch data lebih cepat-->
-    
+
   <!-- <Suspense>
       <template #default>
         <HomeView />
       </template>
-      <template #fallback>
+<template #fallback>
         <p>Loading...</p>
       </template>
-    </Suspense> -->
-    <RouterView />
+</Suspense> -->
+  <RouterView />
 
 </template>

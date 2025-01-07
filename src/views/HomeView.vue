@@ -2,14 +2,15 @@
 import ProductCard from '../components/ProductCard.vue';
 import Pagination from '@/components/Pagination.vue';
 import Loading from '@/components/Loading.vue';
+import ProductForm from '@/components/ProductForm.vue';
 
 import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, onBeforeUnmount, onUnmounted, ref, watch, watchEffect } from 'vue';
+import axios from 'axios';
 
 // const page = ref(1);
 // function nextPage() {
 // 	page.value++;
 // }
-import axios from 'axios';
 const products = ref([]);
 const page = ref(1);
 const limit = ref(8);
@@ -72,6 +73,15 @@ function changePage(newPage) {
 	page.value = newPage;
 }
 
+async function createProduct(product) {
+	try {
+		await axios.post('http://localhost:3000/products', product);
+		// agar ketika berhasil mengirim data, akan ke refresh
+		fetchData();
+	} catch (error) {
+		console.log(error);
+	}
+}
 
 // async function getProducts() {
 // 	const response = await axios.get('http://localhost:3000/products');
@@ -113,10 +123,11 @@ function changePage(newPage) {
 	<!-- {{ products }} -->
 	<!-- {{ page }} -->
 	<!-- <button @click="nextPage">Next Page</button> -->
-	<div v-show="isLoading">
+	<ProductForm @create-product="createProduct" />
+	<div v-if="isLoading">
 		<Loading />
 	</div>
-	<main>
+	<main v-else>
 		<div class="product-grid">
 			<!-- Product 1 --> <!-- karna menggunakan pagination harus products.data -->
 			<ProductCard v-for="(product, index) in products.data" :key="index" :product="product" />
